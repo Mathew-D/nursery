@@ -5,7 +5,7 @@ Program Details: <makes nursery rhyme with image>
 */
 
 mod modules;
-
+use crate::modules::preload_image::TextureManager;
 use crate::modules::label::Label;
 use crate::modules::still_image::StillImage;
 use crate::modules::text_button::TextButton;
@@ -26,11 +26,15 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    let tm = TextureManager::new();
     let mut lbl_out = Label::new("Hello\nWorld", 100.0, 700.0, 15);
     let btn_text = TextButton::new(100.0, 200.0, 200.0, 60.0, "Click Me 1", BLUE, GREEN, 15);
     let btn_two = TextButton::new(200.0, 300.0, 200.0, 60.0, "Click Me 2", BLUE, GREEN, 15);
     let btn_three = TextButton::new(300.0, 400.0, 200.0, 60.0, "Click Me 3", BLUE, GREEN, 15);
     let btn_exit = TextButton::new(400.0, 600.0, 200.0, 60.0, "EXIT", BLUE, GREEN, 8);
+
+    tm.preload_with_loading_screen(&["assets/hump.png", "assets/wall.png", "assets/muffet.png", "assets/spider.png"], None).await;
+
 
     let mut img = StillImage::new(
         "assets/hump.png",
@@ -48,17 +52,22 @@ async fn main() {
 
         if btn_text.click() {
             lbl_out.set_text ("Humpty Dumpty sat on a wall, humpty dumpty had a great fall, all the king's horses and all the king's men couldnt put humpty together again");
-            img.set_image("assets/wall.png").await;
+            
+            img.set_preload(tm.get_preload("assets/wall.png").unwrap());
+            
+           
         }
         img.draw();
         if btn_two.click() {
             lbl_out.set_text("little miss muffet sat on her tuffet, eating her curds and whey");
-            img.set_image("assets/muffet.png").await;
+            img.set_preload(tm.get_preload("assets/muffet.png").unwrap());
+            
         }
         img.draw();
         if btn_three.click() {
             lbl_out.set_text("the itsy bitsy spider climbed up the waterspout,along came the rain and washed the spider out");
-            img.set_image("assets/spider.png").await;
+            img.set_preload(tm.get_preload("assets/spider.png").unwrap());
+            
         }
         if btn_exit.click() {
             break;
