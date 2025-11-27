@@ -5,6 +5,7 @@ Program Details: <makes nursery rhyme with image>
 */
 
 mod modules;
+use crate::modules::scale::use_virtual_resolution;
 use crate::modules::preload_image::TextureManager;
 use crate::modules::label::Label;
 use crate::modules::still_image::StillImage;
@@ -48,6 +49,7 @@ async fn main() {
     .await;
 
     loop {
+         use_virtual_resolution(1024.0, 768.0);
         clear_background(WHITE);
 
         if btn_text.click() {
